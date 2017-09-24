@@ -13,41 +13,41 @@
     <!-- 컨트롤러.js -->
     <script src="controllers.js"></script>
     <script>
-      var app = angular.module("exampleApp", []);
-      app.controller("firstCtrl", function ($scope) {
-        $scope.dataValue = "Hello, Adam";
 
-        $scope.reverseText = function(){
-          $scope.dataValue = $scope.dataValue.split("").reverse().join("");
-        }
+      $(document).ready(function(){
+        $('#jqui button').button().click(function(e){
+          angular.element(angularRegion).scope().$apply('handleClick()');
+        });
       });
 
-      app.controller("secondCtrl", function($scope){
-        $scope.dataValue = "Hello, Jacqui";
+      var app = angular.module("exampleApp", [])
+        .controller("simpleCtrl", function ($scope) {
+          $scope.buttonEnabled = true;
+          $scope.clickCounter = 0;
 
-        $scope.changeCase = function(){$scope.dataValue=$scope.dataValue.toUpperCase();};
-      });
+          $scope.handleClick = function(){
+            $scope.clickCounter++;
+          }
+
+          $scope.$watch('buttonEnabled', function(newValue){
+            $('#jqui button').button({disabled:!newValue});
+          });
+        });
     </script>
   </head>
   <body>
-    <div class="well" ng-controller="firstCtrl">
-      <h4>First Controller</h4>
-        <div class="input-group">
-          <span class="input-group-btn">
-            <button type="button" class="btn btn-default" ng-click="reverseText()">Reverse</button>
-          </span>
-          <input class="form-control" ng-model="dataValue">
-        </div>
-    </div>
-
-    <div class="well" ng-controller="secondCtrl">
-      <h4>Second Controller</h4>
-      <div class="input-group">
-        <span class="input-group-btn">
-          <button type="button" class="btn btn-default" ng-click="changeCase()">Case</button>
-        </span>
-        <input class="form-control" ng-model="dataValue">
+    <div class="well" id="angularRegion" ng-controller="simpleCtrl">
+      <h4>AngularJS</h4>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" ng-model="buttonEnabled">Enable Button
+        </label>
       </div>
+      Click counter: {{clickCounter}}
+    </div>
+    <div class="well" id="jqui">
+      <h4>jQuery UI</h4>
+      <button>Click Me!</button>
     </div>
   </body>
 </html>
