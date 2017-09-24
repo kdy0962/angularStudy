@@ -13,23 +13,28 @@
 
     <script>
       angular.module("exampleApp", [])
-        .controller("defaultCtrl", function ($scope) {});
+        .controller("defaultCtrl", function ($scope) {
+          $scope.requireValue = true;
+          $scope.matchPattern = new RegExp("^[a-z]");
+        });
     </script>
   </head>
   <body>
     <div id="todoPanel" class="panel" ng-controller="defaultCtrl">
       <form name="myForm" novalidate>
         <div class="well">
-          <div class="checkbox">
-            <label>
-              <input name="sample" type="checkbox" ng-model="inputValue"
-                ng-true-value="'Hurrah!'" ng-false-value="'Boo!'">
-                This is a checkbox
-            </label>
+          <div class="form-group">
+            <textarea name="sample" rows="3" cols="40"
+              ng-model="textValue" ng-required="requireValue" ng-minlength="3"
+              ng-maxlength="10" ng-pattern="matchPattern"></textarea>
           </div>
         </div>
         <div class="well">
-          <p>Model Value: {{inputValue}}</p>
+          <p>Required Error : {{myForm.sample.$error.required}}</p>
+          <p>Min Error : {{myForm.sample.$error.minlength}}</p>
+          <p>Max Error : {{myForm.sample.$error.maxlength}}</p>
+          <p>Pattern Error : {{myForm.sample.$error.pattern}}</p>
+          <p>Element Error : {{myForm.sample.$valid}}</p>
         </div>
       </form>
     </div>

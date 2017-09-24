@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html ng-app="exampleApp">
   <head>
-    <title>Forms</title>
+    <title>Controllers</title>
     <!-- 제이쿼리 -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
@@ -13,25 +13,32 @@
 
     <script>
       angular.module("exampleApp", [])
-        .controller("defaultCtrl", function ($scope) {});
+        .controller("simpleCtrl", function ($scope) {
+          $scope.cities = ["London","New York","Paris"];
+
+          $scope.city="London";
+
+          $scope.getCountry = function(city){
+            switch (city) {
+              case "London":
+                return "UK";
+              case "New York":
+                return "USA";
+            }
+          }
+        });
     </script>
   </head>
-  <body>
-    <div id="todoPanel" class="panel" ng-controller="defaultCtrl">
-      <form name="myForm" novalidate>
-        <div class="well">
-          <div class="checkbox">
-            <label>
-              <input name="sample" type="checkbox" ng-model="inputValue"
-                ng-true-value="'Hurrah!'" ng-false-value="'Boo!'">
-                This is a checkbox
-            </label>
-          </div>
-        </div>
-        <div class="well">
-          <p>Model Value: {{inputValue}}</p>
-        </div>
-      </form>
+  <body ng-controller="simpleCtrl">
+    <div class="well">
+      <label>Select a City:</label>
+      <select ng-options="city for city in cities" ng-model="city">
+
+      </select>
+    </div>
+    <div class="well">
+      <p>The city is: {{city}}</p>
+      <p>The country is : {{getCountry(city) || "Unknown"}}</p>
     </div>
   </body>
 </html>
