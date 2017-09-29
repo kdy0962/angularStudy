@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+  <head>
+    <title>Directives</title>
+    <!-- 제이쿼리 -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <!-- 부트스트랩 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+    <!-- 앵귤러 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular.min.js"></script>
+    <script type="text/ng-template" id="scopeTemplate">
+      <div class="panel-body">
+        <p>Name: {{local}}, City:{{cityFn()}}</p>
+      </div>
+    </script>
+    <script>
+
+      var app = angular.module("exampleApp", [])
+        .directive("scopeDemo",function(){
+          return {
+            template: function(){
+              return angular.element(
+                document.querySelector("#scopeTemplate")).html();
+            },
+            scope: { local : "=nameprop",
+                    cityFn:"&city"}
+          }
+        })
+        .controller("scopeCtrl", function ($scope) {
+          $scope.data ={
+            name:"Adam",
+            defaultCity:"London"
+        };
+        $scope.getCity = function(name){
+          return name=="Adam" ? $scope.data.defaultCity : "Unknown";
+        }
+      });
+    </script>
+  </head>
+  <body ng-controller="scopeCtrl" class="panel panel-default">
+    <div class="panel-body">Direct Binding : <input ng-model="data.name"></div>
+    <div class="panel-body" scope-demo city="getCity(data.name)" nameprop="data.name"></div>
+  </body>
+</html>
