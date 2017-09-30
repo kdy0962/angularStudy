@@ -30,12 +30,12 @@
             scope:true,
             template:function(){
               return angular.element(
-                document.querySlector("#template")).html();
+                document.querySelector("#template")).html();
             },
             transclude:true
           }
         })
-        .controller("scopeCtrl", function ($scope) {
+        .controller("defaultCtrl", function ($scope) {
           $scope.dataSource = "controller";
         });
     </script>

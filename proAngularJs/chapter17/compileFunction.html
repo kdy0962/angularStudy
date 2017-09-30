@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+  <head>
+    <title>Directives</title>
+    <!-- 제이쿼리 -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <!-- 부트스트랩 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+    <!-- 앵귤러 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular.min.js"></script>
+    <script>
+
+      var app = angular.module("exampleApp", [])
+        .directive("simpleRepeater",function(){
+          return {
+            scope:{
+              data:"=source",
+              propName:"@itemName"
+            },
+            transclude:'element',
+            compile:function(element,attrs,transcludeFn){
+              return function($scope,$element,$attr){
+                $scope.$watch("data.length",function(){
+                  var parent = $element.parent();
+                  parent.children().remove();
+                  for(var i=0;i<$scope.data.length;i++){
+                    var childScope = $scope.$new();
+                    childScope[$scope.propName] = $scope.data[i];
+                    transcludeFn(childScope, function(clone){
+                      parent.append(clone);
+                    });
+                  }
+                });
+              }
+            }
+          }
+        })
+        .controller("defaultCtrl", function ($scope) {
+          $scope.products = [
+            {name:"Apples",price:1.20},
+            {name:"Bananas",price:2.42},
+            {name:"Pears",price:2.02}
+          ];
+          $scope.changeData = function(){
+            $scope.products.push({name:"Cherries",price:4.02});
+            for(var i =0;i<$scope.products.length;i++){
+              $scope.products[i].price++;
+            }
+          }
+        });
+    </script>
+  </head>
+  <body ng-controller="defaultCtrl" class="panel panel-body">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th><th>Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr simple-repeater source="products" item-name="item">
+          <td>{{item.name}}</td><td>{{item.price | currency}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <button class="btn btn-default text" ng-click="changeData()">Change</button>
+  </body>
+</html>
